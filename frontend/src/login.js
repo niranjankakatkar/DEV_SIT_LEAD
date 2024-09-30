@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,13 +13,16 @@ function Login() {
    const handleInput=(event)=>{
     setValues(prev => ({...prev,[event.target.name]: [event.target.value]}))
    }
+   
+   axios.defaults.withCredentials=true;
 
    const handleSubmit=(event)=>{
         event.preventDefault();
-        axios.post('http://localhost:8081/login',values)
+        axios.post('http://localhost:8081/login_auth',values)
         .then(result => {
             if(result.data.Login ){
                 navigate('/Dashboard')
+                
             }else{
                 alert("No Record");
             }
@@ -59,7 +62,7 @@ function Login() {
 <div className="mb-3">
 <label className="col-form-label">Password</label>
 <div className="pass-group">
-<input type="password" className="pass-input form-control" name='password' onChange={handleInput} />
+<input type="password" placeholder='Enter Password' className="pass-input form-control" name='password' onChange={handleInput} />
 <span className="ti toggle-password ti-eye-off"></span>
 </div>
 </div>
