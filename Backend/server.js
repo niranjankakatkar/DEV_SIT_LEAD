@@ -168,6 +168,278 @@ app.post('/userdelete/:id',(req, res) => {
     })
 })
 
+
+
+app.get("/getallfranchisee", (req, res) => {
+    const sql = "SELECT * FROM franchisee_master ";
+    db.query(sql, (err, data) => {
+        if (err){ 
+             res.json("Fail to fetch");
+        }
+         res.send(data);
+        
+    })
+})
+
+
+app.post('/franchiseeadd',(req, res) => {
+    const sql ="INSERT INTO franchisee_master(`fname`, `mobile_no`, `email`, `address`, `country`, `state`, `city`, `pincode`, `ofname`, `omname`, `olname`, `omobile_no`, `oemail`, `oaddress`, `ocountry`, `ostate`, `ocity`, `opincode`, `gst_number`, `pancard`) VALUES (?)";
+    const values=[
+        req.body.fname,
+        req.body.mobile_no,
+        req.body.email,
+        req.body.address,
+        req.body.country,
+        req.body.state,
+        req.body.city,
+        req.body.pincode,
+        req.body.ofname,
+        req.body.omname,
+        req.body.olname,
+        req.body.omobile_no,
+        req.body.oemail,
+        req.body.oaddress,
+        req.body.ocountry,
+        req.body.ostate,
+        req.body.ocity,
+        req.body.opincode,
+        req.body.gst_number,        
+        req.body.pancard
+    ]
+    db.query(sql, [values],(err, data) => {
+        if(err) return res.json("Error");
+        return res.json("ssss"+data);
+    })
+})
+
+app.get("/getsinglefranchisee/:id", (req, res) => {
+    const sql = "SELECT * FROM franchisee_master where id = ?";
+    const id = req.params.id;
+    db.query(sql,[id], (err, data) => {
+        if(err) return res.json("Error");
+        return res.json(data);
+        
+    })
+})
+
+app.post('/franchiseeedit/:id',(req, res) => {
+    const sql ="update franchisee_master set `fname`=?, `mobile_no`=?, `email`=?, `address`=?, `country`=?, `state`=?, `city`=?, `pincode`=?, `ofname`=?, `omname`=?, `olname`=?, `omobile_no`=?, `oemail`=?, `oaddress`=?, `ocountry`=?, `ostate`=?, `ocity`=?, `opincode`=?, `gst_number`=?, `pancard`=? where id=?";
+    const values=[
+        req.body.fname,
+        req.body.mobile_no,
+        req.body.email,
+        req.body.address,
+        req.body.country,
+        req.body.state,
+        req.body.city,
+        req.body.pincode,
+        req.body.ofname,
+        req.body.omname,
+        req.body.olname,
+        req.body.omobile_no,
+        req.body.oemail,
+        req.body.oaddress,
+        req.body.ocountry,
+        req.body.ostate,
+        req.body.ocity,
+        req.body.opincode,
+        req.body.gst_number,        
+        req.body.pancard
+    ]
+    const id= req.params.id;
+    db.query(sql, [...values,id],(err, data) => {
+        if(err) return res.json("Error");
+        return res.json("ssss"+data);
+    })
+})
+
+app.post('/franchiseedelete/:id',(req, res) => {
+    const sql ="delete from franchisee_master where id=?";
+   
+    const id= req.params.id;
+    db.query(sql, [id],(err, data) => {
+        if(err) return res.json("Error");
+        return res.json("ssss"+data);
+    })
+})
+
+// Category API
+
+app.get("/getallCategory", (req, res) => {
+    const sql = "SELECT * FROM category_master ";
+    db.query(sql, (err, data) => {
+      if (err) {
+        res.json("Fail to fetch");
+      }
+      res.send(data);
+    });
+  });
+  
+  app.post("/categoryadd", (req, res) => {
+    const sql = "INSERT INTO category_master(`name`, `description`) VALUES (?)";
+    const values = [req.body.name, req.body.description];
+    db.query(sql, [values], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.get("/getsinglecategory/:id", (req, res) => {
+    const sql = "SELECT * FROM category_master where id = ?";
+    const id = req.params.id;
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json(data);
+    });
+  });
+  
+  app.post("/categoryedit/:id", (req, res) => {
+    const sql =
+      "update category_master set `name`=?, `description`=? WHERE `id`=?";
+    const values = [req.body.name, req.body.description];
+    const id = req.params.id;
+    db.query(sql, [...values, id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.post("/categorydelete/:id", (req, res) => {
+    const sql = "delete from category_master where id=?";
+  
+    const id = req.params.id;
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  // Sub Category API
+  
+  app.get("/getallsubcategory", (req, res) => {
+    const sql = `
+      SELECT sub_category.*, category_master.name AS category_name
+      FROM sub_category
+      JOIN category_master ON sub_category.category_id = category_master.id
+    `;
+    db.query(sql, (err, data) => {
+      if (err) {
+        return res.json("Fail to fetch");
+      }
+      res.send(data);
+    });
+  });
+  
+  app.post("/subcategoryadd", (req, res) => {
+    const sql =
+      "INSERT INTO sub_category(`name`, `description`, `category_id`) VALUES (?)";
+    const values = [req.body.name, req.body.description, req.body.category_id];
+    db.query(sql, [values], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.get("/getsinglesubcategory/:id", (req, res) => {
+    const sql = `
+      SELECT sub_category.*, category_master.id AS category_id, category_master.name AS category_name
+      FROM sub_category
+      JOIN category_master ON sub_category.category_id = category_master.id
+      WHERE sub_category.id = ?`;
+  
+    const id = req.params.id;
+  
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json(data); // Ensure this is returning the correct data
+    });
+  });
+  
+  app.post("/subcategoryedit/:id", (req, res) => {
+    const sql =
+      "update sub_category set `name`=?, `description`=?,`category_id`=? WHERE `id`=?";
+    const values = [req.body.name, req.body.description, req.body.category_id];
+    const id = req.params.id;
+    db.query(sql, [...values, id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.post("/subcategorydelete/:id", (req, res) => {
+    const sql = "delete from sub_category where id=?";
+  
+    const id = req.params.id;
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  // Subscriptions API
+  app.get("/getallSubscription", (req, res) => {
+    const sql = "SELECT * FROM subscriptions ";
+    db.query(sql, (err, data) => {
+      if (err) {
+        res.json("Fail to fetch");
+      }
+      res.send(data);
+    });
+  });
+  
+  // Subscription API
+  
+  app.post("/subscriptionadd", (req, res) => {
+    const sql =
+      "INSERT INTO subscriptions(`package_name`, `price`, `duration`, `features`) VALUES (?)";
+    const values = [
+      req.body.package_name,
+      req.body.price,
+      req.body.duration,
+      req.body.features,
+    ];
+    db.query(sql, [values], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.get("/getsinglesubscription/:id", (req, res) => {
+    const sql = "SELECT * FROM subscriptions where id = ?";
+    const id = req.params.id;
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json(data);
+    });
+  });
+  
+  app.post("/subscriptionedit/:id", (req, res) => {
+    const sql =
+      "update subscriptions set `package_name`=?, `price`=?, `duration`=?, `features`=? WHERE `id`=?";
+    const values = [
+      req.body.package_name,
+      req.body.price,
+      req.body.duration,
+      req.body.features,
+    ];
+    const id = req.params.id;
+    db.query(sql, [...values, id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+  app.post("/subscriptiondelete/:id", (req, res) => {
+    const sql = "delete from subscriptions where id=?";
+  
+    const id = req.params.id;
+    db.query(sql, [id], (err, data) => {
+      if (err) return res.json("Error");
+      return res.json("ssss" + data);
+    });
+  });
+  
+
 app.get('/', (req, res) => {
     return res.json("From Backend");
 })

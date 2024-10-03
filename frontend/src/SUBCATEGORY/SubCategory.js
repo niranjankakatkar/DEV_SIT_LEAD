@@ -18,8 +18,8 @@ import {
   CCardBody,
 } from "@coreui/react";
 
-function Users() {
-  const [userlist, setUserList] = useState([]);
+function SubCategory() {
+  const [categorylist, setCategoryList] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]); // For filtering search
   const [details, setDetails] = useState([]);
   const [deleteid, setDeleteId] = useState("");
@@ -31,31 +31,30 @@ function Users() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8081/getalluser")
+      .get("http://localhost:8081/getallsubcategory")
       .then((res) => {
-        setUserList(res.data);
-        setFilteredUsers(res.data); // Initialize filtered list
+        setCategoryList(res.data);
+        setFilteredUsers(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     // Filter user list when search term changes
-    const filtered = userlist.filter(
+    const filtered = categorylist.filter(
       (user) =>
-        (user.fname &&
-          user.fname.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.email &&
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.mobile_no && user.mobile_no.includes(searchTerm))
+        (user.name &&
+          user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.subcategory &&
+          user.subcategory.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredUsers(filtered);
     setCurrentPage(0); // Reset to the first page when search changes
-  }, [searchTerm, userlist]);
+  }, [searchTerm, categorylist]);
 
   function handleDelete() {
     axios
-      .post("http://localhost:8081/userdelete/" + deleteid)
+      .post("http://localhost:8081/subcategorydelete/" + deleteid)
       .then((res) => {
         window.location.reload();
       })
@@ -105,7 +104,7 @@ function Users() {
         <NavBar />
         <div className="page-wrapper">
           <div className="content">
-            <h4 className="page-title">Users List</h4>
+            <h4 className="page-title">Sub-category List</h4>
             <div className="card">
               <div className="card-header">
                 <div className="d-flex justify-content-between align-items-center">
@@ -141,9 +140,9 @@ function Users() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <div>
-                      <Link to="/AddUser" className="btn btn-primary">
+                      <Link to="/AddSubCategory" className="btn btn-primary">
                         <i className="ti ti-square-rounded-plus me-2"></i> Add
-                        User
+                        Sub-category
                       </Link>
                     </div>
                   </div>
@@ -155,9 +154,8 @@ function Users() {
                     <CTableRow>
                       <CTableHeaderCell>Avatar</CTableHeaderCell>
                       <CTableHeaderCell>Name</CTableHeaderCell>
-                      <CTableHeaderCell>Date of Birth</CTableHeaderCell>
-                      <CTableHeaderCell>Email</CTableHeaderCell>
-                      <CTableHeaderCell>Mobile No</CTableHeaderCell>
+                      <CTableHeaderCell>Description</CTableHeaderCell>
+                      <CTableHeaderCell>Sub-category</CTableHeaderCell>
                       <CTableHeaderCell>Status</CTableHeaderCell>
                       <CTableHeaderCell>Actions</CTableHeaderCell>
                     </CTableRow>
@@ -168,14 +166,10 @@ function Users() {
                         <CTableDataCell>
                           <CAvatar src={`assets/img/profiles/avatar-19.jpg`} />
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {data.fname} {data.mname} {data.lname}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(data.dob).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>{data.email}</CTableDataCell>
-                        <CTableDataCell>{data.mobile_no}</CTableDataCell>
+                        <CTableDataCell>{data.name}</CTableDataCell>
+                        <CTableDataCell>{data.description}</CTableDataCell>
+                        {/* Replace category_id with category_name */}
+                        <CTableDataCell>{data.category_name}</CTableDataCell>
                         <CTableDataCell>
                           <CBadge color={getBadge(data.status)}>
                             {data.status}
@@ -192,14 +186,13 @@ function Users() {
                           </CButton>
                           <CCollapse visible={details.includes(data.id)}>
                             <CCardBody>
-                              <h4>
-                                {data.fname} {data.lname}
-                              </h4>
-                              <p>DOB: {data.dob}</p>
-                              <p>Email: {data.email}</p>
-                              <p>Mobile: {data.mobile_no}</p>
+                              <h4>{data.name}</h4>
+                              <p>Description: {data.description}</p>
+
                               <CButton color="info" size="sm">
-                                <Link to={`/UserUpdate/${data.id}`}>Edit</Link>
+                                <Link to={`/SubCategoryUpdate/${data.id}`}>
+                                  Edit
+                                </Link>
                               </CButton>
 
                               <CButton
@@ -207,7 +200,6 @@ function Users() {
                                 size="sm"
                                 className="ms-1"
                               >
-                                {" "}
                                 <Link
                                   data-bs-toggle="modal"
                                   data-bs-target="#delete_contact"
@@ -254,7 +246,7 @@ function Users() {
             <div className="modal-content">
               <div className="modal-body">
                 <div className="text-center">
-                  <h4 className="mb-2">Remove User?</h4>
+                  <h4 className="mb-2">Remove Sub-category?</h4>
                   <p className="mb-0">
                     Are you sure you want to remove the selected user?
                   </p>
@@ -280,4 +272,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default SubCategory;

@@ -31,7 +31,7 @@ function Users() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8081/getalluser")
+      .get("http://localhost:8081/getallSubscription")
       .then((res) => {
         setUserList(res.data);
         setFilteredUsers(res.data); // Initialize filtered list
@@ -43,11 +43,8 @@ function Users() {
     // Filter user list when search term changes
     const filtered = userlist.filter(
       (user) =>
-        (user.fname &&
-          user.fname.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.email &&
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.mobile_no && user.mobile_no.includes(searchTerm))
+        user.package_name &&
+        user.package_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
     setCurrentPage(0); // Reset to the first page when search changes
@@ -55,7 +52,7 @@ function Users() {
 
   function handleDelete() {
     axios
-      .post("http://localhost:8081/userdelete/" + deleteid)
+      .post("http://localhost:8081/subscriptiondelete/" + deleteid)
       .then((res) => {
         window.location.reload();
       })
@@ -105,7 +102,7 @@ function Users() {
         <NavBar />
         <div className="page-wrapper">
           <div className="content">
-            <h4 className="page-title">Users List</h4>
+            <h4 className="page-title">Subscription List</h4>
             <div className="card">
               <div className="card-header">
                 <div className="d-flex justify-content-between align-items-center">
@@ -141,9 +138,9 @@ function Users() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <div>
-                      <Link to="/AddUser" className="btn btn-primary">
+                      <Link to="/AddSubscription" className="btn btn-primary">
                         <i className="ti ti-square-rounded-plus me-2"></i> Add
-                        User
+                        Subscription
                       </Link>
                     </div>
                   </div>
@@ -154,10 +151,10 @@ function Users() {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell>Avatar</CTableHeaderCell>
-                      <CTableHeaderCell>Name</CTableHeaderCell>
-                      <CTableHeaderCell>Date of Birth</CTableHeaderCell>
-                      <CTableHeaderCell>Email</CTableHeaderCell>
-                      <CTableHeaderCell>Mobile No</CTableHeaderCell>
+                      <CTableHeaderCell>Subscription name</CTableHeaderCell>
+                      <CTableHeaderCell>Price</CTableHeaderCell>
+                      <CTableHeaderCell>Duration</CTableHeaderCell>
+                      <CTableHeaderCell>Features</CTableHeaderCell>
                       <CTableHeaderCell>Status</CTableHeaderCell>
                       <CTableHeaderCell>Actions</CTableHeaderCell>
                     </CTableRow>
@@ -168,14 +165,10 @@ function Users() {
                         <CTableDataCell>
                           <CAvatar src={`assets/img/profiles/avatar-19.jpg`} />
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {data.fname} {data.mname} {data.lname}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(data.dob).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>{data.email}</CTableDataCell>
-                        <CTableDataCell>{data.mobile_no}</CTableDataCell>
+                        <CTableDataCell>{data.package_name}</CTableDataCell>
+                        <CTableDataCell>{data.price}</CTableDataCell>
+                        <CTableDataCell>{data.duration}</CTableDataCell>
+                        <CTableDataCell>{data.features}</CTableDataCell>
                         <CTableDataCell>
                           <CBadge color={getBadge(data.status)}>
                             {data.status}
@@ -192,14 +185,14 @@ function Users() {
                           </CButton>
                           <CCollapse visible={details.includes(data.id)}>
                             <CCardBody>
-                              <h4>
-                                {data.fname} {data.lname}
-                              </h4>
-                              <p>DOB: {data.dob}</p>
-                              <p>Email: {data.email}</p>
-                              <p>Mobile: {data.mobile_no}</p>
+                              <h4>{data.package_name}</h4>
+                              <p>Price: {data.price}</p>
+                              <p>Duration: {data.duration}</p>
+                              <p>Features: {data.features}</p>
                               <CButton color="info" size="sm">
-                                <Link to={`/UserUpdate/${data.id}`}>Edit</Link>
+                                <Link to={`/SubscriptionUpdate/${data.id}`}>
+                                  Edit
+                                </Link>
                               </CButton>
 
                               <CButton
@@ -254,7 +247,7 @@ function Users() {
             <div className="modal-content">
               <div className="modal-body">
                 <div className="text-center">
-                  <h4 className="mb-2">Remove User?</h4>
+                  <h4 className="mb-2">Remove Subscription?</h4>
                   <p className="mb-0">
                     Are you sure you want to remove the selected user?
                   </p>

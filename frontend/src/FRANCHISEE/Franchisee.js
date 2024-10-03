@@ -19,7 +19,7 @@ import {
 } from "@coreui/react";
 
 function Users() {
-  const [userlist, setUserList] = useState([]);
+  const [franchiseelist, setFranchiseeList] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]); // For filtering search
   const [details, setDetails] = useState([]);
   const [deleteid, setDeleteId] = useState("");
@@ -31,31 +31,32 @@ function Users() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8081/getalluser")
+      .get("http://localhost:8081/getallfranchisee")
       .then((res) => {
-        setUserList(res.data);
-        setFilteredUsers(res.data); // Initialize filtered list
+        setFranchiseeList(res.data);
+        setFilteredUsers(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     // Filter user list when search term changes
-    const filtered = userlist.filter(
+    const filtered = franchiseelist.filter(
       (user) =>
         (user.fname &&
           user.fname.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.email &&
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.mobile_no && user.mobile_no.includes(searchTerm))
+        (user.oname &&
+          user.oname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.city.toLowerCase() &&
+          user.city.includes(searchTerm.toLowerCase()))
     );
     setFilteredUsers(filtered);
     setCurrentPage(0); // Reset to the first page when search changes
-  }, [searchTerm, userlist]);
+  }, [searchTerm, franchiseelist]);
 
   function handleDelete() {
     axios
-      .post("http://localhost:8081/userdelete/" + deleteid)
+      .post("http://localhost:8081/franchiseedelete/" + deleteid)
       .then((res) => {
         window.location.reload();
       })
@@ -105,7 +106,7 @@ function Users() {
         <NavBar />
         <div className="page-wrapper">
           <div className="content">
-            <h4 className="page-title">Users List</h4>
+            <h4 className="page-title">Franchisee List</h4>
             <div className="card">
               <div className="card-header">
                 <div className="d-flex justify-content-between align-items-center">
@@ -141,9 +142,9 @@ function Users() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <div>
-                      <Link to="/AddUser" className="btn btn-primary">
+                      <Link to="/AddFranchisee" className="btn btn-primary">
                         <i className="ti ti-square-rounded-plus me-2"></i> Add
-                        User
+                        Franchisee
                       </Link>
                     </div>
                   </div>
@@ -155,9 +156,9 @@ function Users() {
                     <CTableRow>
                       <CTableHeaderCell>Avatar</CTableHeaderCell>
                       <CTableHeaderCell>Name</CTableHeaderCell>
-                      <CTableHeaderCell>Date of Birth</CTableHeaderCell>
                       <CTableHeaderCell>Email</CTableHeaderCell>
-                      <CTableHeaderCell>Mobile No</CTableHeaderCell>
+                      <CTableHeaderCell>City</CTableHeaderCell>
+                      <CTableHeaderCell>Contact</CTableHeaderCell>
                       <CTableHeaderCell>Status</CTableHeaderCell>
                       <CTableHeaderCell>Actions</CTableHeaderCell>
                     </CTableRow>
@@ -168,14 +169,11 @@ function Users() {
                         <CTableDataCell>
                           <CAvatar src={`assets/img/profiles/avatar-19.jpg`} />
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {data.fname} {data.mname} {data.lname}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(data.dob).toLocaleDateString()}
-                        </CTableDataCell>
+                        <CTableDataCell>{data.fname}</CTableDataCell>
                         <CTableDataCell>{data.email}</CTableDataCell>
+                        <CTableDataCell>{data.city}</CTableDataCell>
                         <CTableDataCell>{data.mobile_no}</CTableDataCell>
+
                         <CTableDataCell>
                           <CBadge color={getBadge(data.status)}>
                             {data.status}
@@ -192,14 +190,15 @@ function Users() {
                           </CButton>
                           <CCollapse visible={details.includes(data.id)}>
                             <CCardBody>
-                              <h4>
-                                {data.fname} {data.lname}
-                              </h4>
-                              <p>DOB: {data.dob}</p>
+                              <h4>{data.fname}</h4>
                               <p>Email: {data.email}</p>
-                              <p>Mobile: {data.mobile_no}</p>
+                              <p>City: {data.city}</p>
+                              <p>Contact {data.mobile_no}</p>
+
                               <CButton color="info" size="sm">
-                                <Link to={`/UserUpdate/${data.id}`}>Edit</Link>
+                                <Link to={`/FranchiseeUpdate/${data.id}`}>
+                                  Edit
+                                </Link>
                               </CButton>
 
                               <CButton

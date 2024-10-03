@@ -1,41 +1,51 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate,useLocation } from 'react-router-dom'
-import axios from 'axios'
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const NavBar = () => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState("");
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    axios.get('http://localhost:8081/session_get')
-      .then(res => {
-
+    axios
+      .get("http://localhost:8081/session_get")
+      .then((res) => {
         if (res.data.valid) {
           setName(res.data.token_id);
         } else {
-          navigate('/')
+          navigate("/");
         }
       })
-      .catch(err => console.log(err))
-  }, [])
+      .catch((err) => console.log(err));
+  }, [navigate]);
 
   const location = useLocation();
 
-  // Function to apply styles dynamically for links
-  const getLinkStyles = (path) => ({
-    color: location.pathname === path ? "#E41F07" : "#333", // Red when active, default when inactive
-    backgroundColor: location.pathname === path ? "#FCE9E6" : "transparent", // Light background for active link
-  });
+  const getLinkStyles = (paths) => {
+    const isActive = paths.some(
+      (path) =>
+        location.pathname === path || location.pathname.startsWith(`${path}/`)
+    );
+    return {
+      color: isActive ? "#E41F07" : "#333", // Red when active, default when inactive
+      backgroundColor: isActive ? "#FCE9E6" : "transparent", // Light background for active link
+    };
+  };
 
   // Function to apply icon styles dynamically
-  const getIconStyles = (path) => ({
-    color: location.pathname === path ? "white" : "#333", // Icon color set to white
-    backgroundColor: location.pathname === path ? "#E41F07" : "#F6F6F6", // Red background for active icon, default when inactive
-    padding: "5px", // Padding for visibility of the background color
-    borderRadius: "4px", // Optional: Rounded corners for the icon background
-  });
+  const getIconStyles = (paths) => {
+    const isActive = paths.some(
+      (path) =>
+        location.pathname === path || location.pathname.startsWith(`${path}/`)
+    );
+    return {
+      color: isActive ? "white" : "#333", // Icon color set to white
+      backgroundColor: isActive ? "#E41F07" : "#F6F6F6", // Red background for active icon, default when inactive
+      padding: "5px", // Padding for visibility of the background color
+      borderRadius: "4px", // Optional: Rounded corners for the icon background
+    };
+  };
 
   return (
     <div>
@@ -177,7 +187,6 @@ const NavBar = () => {
                       </div>
                       <div className="col-md-6">
                         <ul className="menu-list">
-
                           <li>
                             <a href="leads.html">
                               <div className="menu-details">
@@ -235,8 +244,6 @@ const NavBar = () => {
                     </div>
                   </div>
                 </li>
-
-
               </ul>
             </li>
 
@@ -283,7 +290,6 @@ const NavBar = () => {
                         </div>
                       </a>
                     </li>
-
                   </ul>
                 </div>
                 <div className="topnav-dropdown-footer">
@@ -358,7 +364,7 @@ const NavBar = () => {
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
               <li className="clinicdropdown">
-                <a href="profile.html">
+                <Link to="/Dashboard">
                   <img
                     src="assets/img/profiles/avatar-14.jpg"
                     className="img-fluid"
@@ -368,82 +374,241 @@ const NavBar = () => {
                     <h5>{name}</h5>
                     <h6>Tech Lead</h6>
                   </div>
-                </a>
+                </Link>
               </li>
             </ul>
             <ul>
               <li>
                 <h6 className="submenu-hdr">Main Menu</h6>
                 <ul>
-                <li>
-                    <Link to="/Dashboard" style={getLinkStyles("/Dashboard")}>
+                  <li>
+                    <Link to="/Dashboard" style={getLinkStyles(["/Dashboard"])}>
                       <i
                         className="ti ti-user-up"
-                        style={getIconStyles("/Dashboard")}
+                        style={getIconStyles(["/Dashboard"])}
                       ></i>
                       <span
-                        style={{ color: getLinkStyles("/Dashboard").color }}
+                        style={{ color: getLinkStyles(["/Dashboard"]).color }}
                       >
                         Dashboard
                       </span>
                     </Link>
                   </li>
 
-                 
                   <li>
-                    <Link to="/Users" style={getLinkStyles("/Users")}>
+                    <Link
+                      to="/Users"
+                      style={getLinkStyles([
+                        "/Users",
+                        "/AddUser",
+                        "/UserUpdate",
+                      ])}
+                    >
                       <i
                         className="ti ti-building-community"
-                        style={getIconStyles("/Users")}
+                        style={getIconStyles([
+                          "/Users",
+                          "/AddUser",
+                          "/UserUpdate",
+                        ])}
                       ></i>
-                      <span style={{ color: getLinkStyles("/Users").color }}>
+                      <span
+                        style={{
+                          color: getLinkStyles([
+                            "/Users",
+                            "/AddUser",
+                            "/UserUpdate",
+                          ]).color,
+                        }}
+                      >
                         Users
                       </span>
                     </Link>
                   </li>
+
                   <li>
-                    <Link to="/Franchisee">
-                      <i className="ti ti-building-community"></i>
-                      <span>Franchisee</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/Leads">
-                      <i className="ti ti-chart-arcs"></i>
-                      <span>Leads</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/Team">
-                      <i className="ti ti-users"></i>
-                      <span>Team Lead</span>
+                    <Link
+                      to="/Franchisee"
+                      style={getLinkStyles([
+                        "/Franchisee",
+                        "/AddFranchisee",
+                        "/FranchiseeUpdate",
+                      ])}
+                    >
+                      <i
+                        className="ti ti-building-community"
+                        style={getIconStyles([
+                          "/Franchisee",
+                          "/AddFranchisee",
+                          "/FranchiseeUpdate",
+                        ])}
+                      ></i>
+                      <span
+                        style={{
+                          color: getLinkStyles([
+                            "/Franchisee",
+                            "/AddFranchisee",
+                            "/FranchiseeUpdate",
+                          ]).color,
+                        }}
+                      >
+                        Franchisee
+                      </span>
                     </Link>
                   </li>
 
+                  <li>
+                    <Link to="/Leads" style={getLinkStyles(["/Leads"])}>
+                      <i
+                        className="ti ti-chart-arcs"
+                        style={getIconStyles(["/Leads"])}
+                      ></i>
+                      <span style={{ color: getLinkStyles(["/Leads"]).color }}>
+                        Leads
+                      </span>
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link to="/Team" style={getLinkStyles(["/Team"])}>
+                      <i
+                        className="ti ti-users"
+                        style={getIconStyles(["/Team"])}
+                      ></i>
+                      <span style={{ color: getLinkStyles(["/Team"]).color }}>
+                        Team Lead
+                      </span>
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/Category"
+                      style={getLinkStyles([
+                        "/Category",
+                        "/AddCategory",
+                        "/CategoryUpdate",
+                      ])}
+                    >
+                      <i
+                        className="ti ti-building-community"
+                        style={getIconStyles([
+                          "/Category",
+                          "/AddCategory",
+                          "/CategoryUpdate",
+                        ])}
+                      ></i>
+                      <span
+                        style={{
+                          color: getLinkStyles([
+                            "/Category",
+                            "/AddCategory",
+                            "/CategoryUpdate",
+                          ]).color,
+                        }}
+                      >
+                        Category
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/SubCategory"
+                      style={getLinkStyles([
+                        "/SubCategory",
+                        "/SubAddCategory",
+                        "/SubCategoryUpdate",
+                      ])}
+                    >
+                      <i
+                        className="ti ti-building-community"
+                        style={getIconStyles([
+                          "/SubCategory",
+                          "/SubAddCategory",
+                          "/SubCategoryUpdate",
+                        ])}
+                      ></i>
+                      <span
+                        style={{
+                          color: getLinkStyles([
+                            "/SubCategory",
+                            "/SubAddCategory",
+                            "/SubCategoryUpdate",
+                          ]).color,
+                        }}
+                      >
+                        Sub-category
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/Subscription"
+                      style={getLinkStyles([
+                        "/Subscription",
+                        "/AddSubscription",
+                        "/SubscriptionUpdate",
+                      ])}
+                    >
+                      <i
+                        className="ti ti-building-community"
+                        style={getIconStyles([
+                          "/Subscription",
+                          "/AddSubscription",
+                          "/SubscriptionUpdate",
+                        ])}
+                      ></i>
+                      <span
+                        style={{
+                          color: getLinkStyles([
+                            "/Subscription",
+                            "/AddSubscription",
+                            "/SubscriptionUpdate",
+                          ]).color,
+                        }}
+                      >
+                        Subscription
+                      </span>
+                    </Link>
+                  </li>
                 </ul>
               </li>
-              
+
               <li>
-                <h6 class="submenu-hdr">Reports</h6>
+                <h6 className="submenu-hdr">Reports</h6>
                 <ul>
-                  <li class="submenu">
+                  <li className="submenu">
                     <a href="javascript:void(0);">
-                      <i class="ti ti-file-invoice"></i><span>Reports</span><span
-                        class="menu-arrow"></span>
+                      <i className="ti ti-file-invoice"></i>
+                      <span>Reports</span>
+                      <span className="menu-arrow"></span>
                     </a>
                     <ul>
-                      <li><Link to="/b">Lead Reports</Link></li>
-                      <li><Link to="/b">Deal Reports</Link></li>
-                      <li><Link to="/b">Contact Reports</Link></li>
-                      <li><Link to="/b">Company Reports</Link></li>
-                      <li><Link to="/b">Project Reports</Link></li>
-                      <li><Link to="/b">Task Reports</Link></li>
+                      <li>
+                        <Link to="/b">Lead Reports</Link>
+                      </li>
+                      <li>
+                        <Link to="/b">Deal Reports</Link>
+                      </li>
+                      <li>
+                        <Link to="/b">Contact Reports</Link>
+                      </li>
+                      <li>
+                        <Link to="/b">Company Reports</Link>
+                      </li>
+                      <li>
+                        <Link to="/b">Project Reports</Link>
+                      </li>
+                      <li>
+                        <Link to="/b">Task Reports</Link>
+                      </li>
                     </ul>
                   </li>
                 </ul>
               </li>
+
               <li>
-                <h6 class="submenu-hdr">Settings</h6>
+                <h6 className="submenu-hdr">Settings</h6>
                 <ul>
                   <li>
                     <Link to="/Team">
@@ -460,5 +625,4 @@ const NavBar = () => {
     </div>
   );
 };
-
 export default NavBar;
