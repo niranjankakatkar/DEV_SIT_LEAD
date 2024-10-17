@@ -25,16 +25,24 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Daterangepicker css -->
+    <link rel="stylesheet" href="assets/vendor/daterangepicker/daterangepicker.css">
 
-<link rel="stylesheet" href="assets/admin/css/vendor.min.css">
-<link rel="stylesheet" href="assets/admin/vendor/icon-set/style.css">
+    <!-- Vector Map css -->
+    <link rel="stylesheet" href="assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css">
 
-<link rel="stylesheet" href="assets/admin/css/bootstrap.min.css">
-<link rel="stylesheet" href="assets/admin/css/theme.minc619.css?v=1.0">
-<link rel="stylesheet" href="assets/admin/css/style.css">
-<link rel="stylesheet" href="assets/admin/css/toastr.css">
+    <!-- Theme Config Js -->
+    <script src="assets/js/config.js"></script>
+
+    <!-- App css -->
+    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- Icons css -->
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
     <title>React App</title>
   </head>
   <body>
@@ -51,140 +59,25 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
-    
-<script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/admin/js/vendor.min.js"></script>
+       <!-- Vendor js -->
+       <script src="assets/js/vendor.min.js"></script>
 
-<script src="assets/admin/js/theme.min.js"></script>
-<script src="assets/admin/js/toastr.js"></script>
-<script type="text/javascript"></script>
+       <!-- Daterangepicker js -->
+       <script src="assets/vendor/daterangepicker/moment.min.js"></script>
+       <script src="assets/vendor/daterangepicker/daterangepicker.js"></script>
 
+       <!-- Apex Charts js -->
+     
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/admin/js/vendor.min.js"></script>
+       <!-- Vector Map js -->
+       <script src="assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
+       <script src="assets/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js"></script>
 
-<script src="assets/admin/js/theme.min.js"></script>
-<script src="assets/admin/js/toastr.js"></script>
-<script type="text/javascript"></script>
-<script>
-    "use strict";
-    // $("#forget-password").hide();
-        $("#role-select").change(function() {
-            var selectValue = $(this).val();
-            if (selectValue == "admin") {
-            $("#forget-password").show();
-            $("#forget-password1").hide();
-            } else if(selectValue == "vendor") {
-            $("#forget-password").hide();
-            $("#forget-password1").show();
-            }
-            else {
-            $("#forget-password").hide();
-            $("#forget-password1").hide();
-            }
-        });
+       <!-- Dashboard App js -->
+      
 
-    $(document).on('ready', function () {
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
-        $('.js-toggle-password').each(function () {
-            new HSTogglePassword(this).init()
-        });
-
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
-        $('.js-validate').each(function () {
-            $.HSCore.components.HSValidation.init($(this));
-        });
-    });
-
-
-$(document).on('click','.reloadCaptcha', function(){
-    $.ajax({
-        url: "https://6ammart-admin.6amtech.com/reload-captcha",
-        type: "GET",
-        dataType: 'json',
-        beforeSend: function () {
-            $('#loading').show()
-            $('.capcha-spin').addClass('active')
-        },
-        success: function(data) {
-            $('#reload-captcha').html(data.view);
-        },
-        complete: function () {
-            $('#loading').hide()
-            $('.capcha-spin').removeClass('active')
-        }
-    });
-});
-
-
-    $(document).ready(function() {
-        $('.onerror-image').on('error', function() {
-            let img = $(this).data('onerror-image')
-            $(this).attr('src', img);
-        });
-    });
-</script>
-<script src="https://www.google.com/recaptcha/api.js?render=6LeGbeslAAAAAKcyn9uQiSSgY_Q1zxlDVmIOW9PF"></script>
-<script>
-        $(document).ready(function() {
-            $('#signInBtn').click(function (e) {
-                if( $('#set_default_captcha_value').val() == 1){
-                    $('#form-id').submit();
-                    return true;
-                }
-                e.preventDefault();
-                if (typeof grecaptcha === 'undefined') {
-                    toastr.error('Invalid recaptcha key provided. Please check the recaptcha configuration.');
-                    $('#reload-captcha').removeClass('d-none');
-                    $('#set_default_captcha_value').val('1');
-
-                    return;
-                }
-                grecaptcha.ready(function () {
-                    grecaptcha.execute('6LeGbeslAAAAAKcyn9uQiSSgY_Q1zxlDVmIOW9PF', {action: 'submit'}).then(function (token) {
-                        $('#g-recaptcha-response').value = token;
-                        $('#form-id').submit();
-                    });
-                });
-                window.onerror = function (message) {
-                    var errorMessage = 'An unexpected error occurred. Please check the recaptcha configuration';
-                    if (message.includes('Invalid site key')) {
-                        errorMessage = 'Invalid site key provided. Please check the recaptcha configuration.';
-                    } else if (message.includes('not loaded in api.js')) {
-                        errorMessage = 'reCAPTCHA API could not be loaded. Please check the recaptcha API configuration.';
-                    }
-                    $('#reload-captcha').removeClass('d-none');
-                    $('#set_default_captcha_value').val('1');
-                    toastr.error(errorMessage)
-                    return true;
-                };
-            });
-        });
-    </script>
-<script>
-        "use strict";
-        $('.copy_cred').on('click', function () {
-            $('#signinSrEmail').val('admin@admin.com');
-            $('#signupSrPassword').val('12345678');
-            toastr.success('Copied successfully!', 'Success!', {
-                CloseButton: true,
-                ProgressBar: true
-            });
-        })
-        $('.copy_cred2').on('click', function () {
-            $('#signinSrEmail').val('test.restaurant@gmail.com');
-            $('#signupSrPassword').val('12345678');
-            toastr.success('Copied successfully!', 'Success!', {
-                CloseButton: true,
-                ProgressBar: true
-            });
-        })
-    </script>
-
-<script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="assets/admin/vendor/babel-polyfill/polyfill.min.js"><\/script>');
-</script>
-
+       <!-- App js -->
+       <script src="assets/js/app.min.js"></script>
 
   </body>
 </html>
