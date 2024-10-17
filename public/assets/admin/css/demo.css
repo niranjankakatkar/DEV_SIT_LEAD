@@ -1,0 +1,10 @@
+/* Hide the tooltip on hover for mailto and tel links */
+a[href^="mailto:"],
+a[href^="tel:"] {
+    pointer-events: none; /* Disable click events */
+}
+a[href^="mailto:"]::after,
+a[href^="tel:"]::after {
+                 content: ''; /* Empty content */
+                 display: none; /* Hide the tooltip */
+             }
